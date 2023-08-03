@@ -1,5 +1,9 @@
-const image = new Image();
-image.src = './img/platform.png';
+function createImage(imageSrc) {
+	const image = new Image();
+	image.src = `./img/${imageSrc}.png`;
+	return image;
+}
+const PlatformImage = createImage('platform');
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -61,11 +65,50 @@ class Platform {
 		);
 	}
 }
+class genericObject {
+	constructor({ x, y, image }) {
+		this.position = {
+			x,
+			y,
+		};
+		this.image = image;
+		this.width = image.width;
+		this.height = image.height;
+	}
+	draw() {
+		c.drawImage(
+			this.image,
+			this.position.x,
+			this.position.y
+		);
+	}
+}
 
 const player = new Player();
 const platforms = [
-	new Platform({ x: -1, y: 470, image }),
-	new Platform({ x: image.width - 3, y: 470, image }),
+	new Platform({
+		x: -1,
+		y: 470,
+		image: PlatformImage,
+	}),
+	new Platform({
+		x: PlatformImage.width - 3,
+		y: 470,
+		image: PlatformImage,
+	}),
+];
+
+const genericObjects = [
+	new genericObject({
+		x: -1,
+		y: -1,
+		image: createImage('background'),
+	}),
+	new genericObject({
+		x: -1,
+		y: -1,
+		image: createImage('hills'),
+	}),
 ];
 
 const keys = {
@@ -83,6 +126,11 @@ function animate() {
 	requestAnimationFrame(animate);
 	c.fillStyle = 'white';
 	c.fillRect(0, 0, canvas.width, canvas.height);
+
+	genericObjects.forEach((genericObject) => {
+		genericObject.draw();
+	});
+
 	platforms.forEach((platform) => {
 		platform.draw();
 	});
@@ -99,10 +147,16 @@ function animate() {
 			platforms.forEach((platform) => {
 				platform.position.x -= 5;
 			});
+			genericObjects.forEach((genericObject) => {
+				genericObject.position.x -= 3;
+			});
 		} else if (keys.left.pressed) {
 			scrollOffset -= 5;
 			platforms.forEach((platform) => {
 				platform.position.x += 5;
+			});
+			genericObjects.forEach((genericObject) => {
+				genericObject.position.x += 3;
 			});
 		}
 	}
