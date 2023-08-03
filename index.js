@@ -43,7 +43,6 @@ class Player {
 			canvas.height
 		)
 			this.velocity.y += gravity;
-		else this.velocity.y = 0;
 	}
 }
 
@@ -84,8 +83,8 @@ class genericObject {
 	}
 }
 
-const player = new Player();
-const platforms = [
+let player = new Player();
+let platforms = [
 	new Platform({
 		x: -1,
 		y: 470,
@@ -96,9 +95,14 @@ const platforms = [
 		y: 470,
 		image: PlatformImage,
 	}),
+	new Platform({
+		x: PlatformImage.width * 2 + 100,
+		y: 470,
+		image: PlatformImage,
+	}),
 ];
 
-const genericObjects = [
+let genericObjects = [
 	new genericObject({
 		x: -1,
 		y: -1,
@@ -121,6 +125,42 @@ const keys = {
 };
 
 let scrollOffset = 0;
+
+function init() {
+	player = new Player();
+	platforms = [
+		new Platform({
+			x: -1,
+			y: 470,
+			image: PlatformImage,
+		}),
+		new Platform({
+			x: PlatformImage.width - 3,
+			y: 470,
+			image: PlatformImage,
+		}),
+		new Platform({
+			x: PlatformImage.width * 2 + 100,
+			y: 470,
+			image: PlatformImage,
+		}),
+	];
+
+	genericObjects = [
+		new genericObject({
+			x: -1,
+			y: -1,
+			image: createImage('background'),
+		}),
+		new genericObject({
+			x: -1,
+			y: -1,
+			image: createImage('hills'),
+		}),
+	];
+
+	scrollOffset = 0;
+}
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -178,8 +218,15 @@ function animate() {
 			player.velocity.y = 0;
 		}
 	});
+
+	//win condition
 	if (scrollOffset > 2000) {
 		console.log('win');
+	}
+
+	//loose condition
+	if (player.position.y > canvas.height) {
+		init();
 	}
 }
 
