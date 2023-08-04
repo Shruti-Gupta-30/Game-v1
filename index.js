@@ -245,7 +245,7 @@ addEventListener('keydown', ({ keyCode }) => {
 			break;
 		case 87:
 			console.log('up');
-			player.velocity.y -= 8;
+			player.velocity.y -= 10;
 			break;
 	}
 });
