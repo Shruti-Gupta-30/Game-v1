@@ -4,6 +4,7 @@ function createImage(imageSrc) {
 	return image;
 }
 const PlatformImage = createImage('platform');
+const PlatformSmallTall = createImage('platformSmallTall');
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -14,6 +15,7 @@ const gravity = 0.2;
 
 class Player {
 	constructor() {
+		this.speed = 10;
 		this.position = {
 			x: 100,
 			y: 100,
@@ -84,36 +86,9 @@ class genericObject {
 }
 
 let player = new Player();
-let platforms = [
-	new Platform({
-		x: -1,
-		y: 470,
-		image: PlatformImage,
-	}),
-	new Platform({
-		x: PlatformImage.width - 3,
-		y: 470,
-		image: PlatformImage,
-	}),
-	new Platform({
-		x: PlatformImage.width * 2 + 100,
-		y: 470,
-		image: PlatformImage,
-	}),
-];
+let platforms = [];
 
-let genericObjects = [
-	new genericObject({
-		x: -1,
-		y: -1,
-		image: createImage('background'),
-	}),
-	new genericObject({
-		x: -1,
-		y: -1,
-		image: createImage('hills'),
-	}),
-];
+let genericObjects = [];
 
 const keys = {
 	right: {
@@ -144,6 +119,21 @@ function init() {
 			y: 470,
 			image: PlatformImage,
 		}),
+		new Platform({
+			x: PlatformImage.width * 3 + 300,
+			y: 470,
+			image: PlatformImage,
+		}),
+		new Platform({
+			x: PlatformImage.width * 4 + 297,
+			y: 470,
+			image: PlatformImage,
+		}),
+		new Platform({
+			x: PlatformImage.width * 5 + 450,
+			y: 250,
+			image: PlatformSmallTall,
+		}),
 	];
 
 	genericObjects = [
@@ -162,6 +152,7 @@ function init() {
 	scrollOffset = 0;
 }
 
+init();
 function animate() {
 	requestAnimationFrame(animate);
 	c.fillStyle = 'white';
@@ -177,26 +168,32 @@ function animate() {
 	player.update();
 
 	if (keys.right.pressed && player.position.x < 400) {
-		player.velocity.x = 5;
-	} else if (keys.left.pressed && player.position.x > 100) {
-		player.velocity.x = -5;
+		player.velocity.x = player.speed;
+	} else if (
+		(keys.left.pressed && player.position.x > 100) ||
+		(keys.left.pressed &&
+			scrollOffset === 0 &&
+			player.position.x > 0)
+	) {
+		player.velocity.x = -player.speed;
 	} else {
 		player.velocity.x = 0;
+
 		if (keys.right.pressed) {
-			scrollOffset += 5;
+			scrollOffset += player.speed;
 			platforms.forEach((platform) => {
-				platform.position.x -= 5;
+				platform.position.x -= player.speed;
 			});
 			genericObjects.forEach((genericObject) => {
-				genericObject.position.x -= 3;
+				genericObject.position.x -= player.speed * 0.66;
 			});
-		} else if (keys.left.pressed) {
-			scrollOffset -= 5;
+		} else if (keys.left.pressed && scrollOffset > 0) {
+			scrollOffset -= player.speed;
 			platforms.forEach((platform) => {
-				platform.position.x += 5;
+				platform.position.x += player.speed;
 			});
 			genericObjects.forEach((genericObject) => {
-				genericObject.position.x += 3;
+				genericObject.position.x += player.speed * 0.66;
 			});
 		}
 	}
@@ -248,7 +245,7 @@ addEventListener('keydown', ({ keyCode }) => {
 			break;
 		case 87:
 			console.log('up');
-			player.velocity.y -= 20;
+			player.velocity.y -= 8;
 			break;
 	}
 });
@@ -269,7 +266,6 @@ addEventListener('keyup', ({ keyCode }) => {
 			break;
 		case 87:
 			console.log('up');
-			player.velocity.y += 20;
 			break;
 	}
 });
