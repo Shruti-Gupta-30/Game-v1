@@ -15,7 +15,7 @@ const gravity = 0.2;
 
 class Player {
 	constructor() {
-		this.speed = 10;
+		this.speed = 5;
 		this.position = {
 			x: 100,
 			y: 100,
@@ -198,7 +198,7 @@ function animate() {
 		(keys.left.pressed && player.position.x > 100) ||
 		(keys.left.pressed &&
 			scrollOffset === 0 &&
-			player.position.x > 0)
+			player.position.x < 0)
 	) {
 		player.velocity.x = -player.speed;
 	} else if (
@@ -209,7 +209,7 @@ function animate() {
 	} else {
 		player.velocity.x = 0;
 
-		if (keys.right.pressed) {
+		if (keys.right.pressed ) {
 			scrollOffset += player.speed;
 			platforms.forEach((platform) => {
 				platform.position.x -= player.speed;
@@ -225,7 +225,9 @@ function animate() {
 			genericObjects.forEach((genericObject) => {
 				genericObject.position.x += player.speed * 0.66;
 			});
-		}
+		} else if(scrollOffset>(PlatformImage.width * 8))
+			scrollOffset=0;
+		
 	}
 
 	//platform collision detection
@@ -291,7 +293,6 @@ addEventListener('keyup', ({ keyCode }) => {
 			break;
 		case 68:
 			console.log('right');
-
 			keys.right.pressed = false;
 			break;
 		case 87:
