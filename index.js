@@ -3,11 +3,12 @@ function createImage(imageSrc) {
 	image.src = `./img/${imageSrc}.png`;
 	return image;
 }
-const PlatformImage = createImage('platform');
-const PlatformSmallTall = createImage('platformSmallTall');
+const PlatformImage = createImage("platform");
+const PlatformSmallTall = createImage("platformSmallTall");
+const walk = createImage("Walk");
 
-const canvas = document.querySelector('canvas');
-const c = canvas.getContext('2d');
+const canvas = document.querySelector("canvas");
+const c = canvas.getContext("2d");
 canvas.width = 1024;
 canvas.height = 576;
 
@@ -24,12 +25,18 @@ class Player {
 			x: 0,
 			y: 0,
 		};
-		this.width = 30;
-		this.height = 30;
+		this.width = 60;
+		this.height = 150;
+
+		this.image = walk;
 	}
 	draw() {
-		c.fillStyle = 'red';
-		c.fillRect(
+		c.drawImage(
+			this.image,
+			128,
+			0,
+			128,
+			128,
 			this.position.x,
 			this.position.y,
 			this.width,
@@ -40,10 +47,7 @@ class Player {
 		this.draw();
 		this.position.x += this.velocity.x;
 		this.position.y += this.velocity.y;
-		if (
-			this.position.y + this.height + this.velocity.y <=
-			canvas.height
-		)
+		if (this.position.y + this.height + this.velocity.y <= canvas.height)
 			this.velocity.y += gravity;
 	}
 }
@@ -59,11 +63,7 @@ class Platform {
 		this.height = image.height;
 	}
 	draw() {
-		c.drawImage(
-			this.image,
-			this.position.x,
-			this.position.y
-		);
+		c.drawImage(this.image, this.position.x, this.position.y);
 	}
 }
 class genericObject {
@@ -77,11 +77,7 @@ class genericObject {
 		this.height = image.height;
 	}
 	draw() {
-		c.drawImage(
-			this.image,
-			this.position.x,
-			this.position.y
-		);
+		c.drawImage(this.image, this.position.x, this.position.y);
 	}
 }
 
@@ -165,12 +161,12 @@ function init() {
 		new genericObject({
 			x: -1,
 			y: -1,
-			image: createImage('background'),
+			image: createImage("background"),
 		}),
 		new genericObject({
 			x: -1,
 			y: -1,
-			image: createImage('hills'),
+			image: createImage("hills"),
 		}),
 	];
 
@@ -180,7 +176,7 @@ function init() {
 init();
 function animate() {
 	requestAnimationFrame(animate);
-	c.fillStyle = 'white';
+	c.fillStyle = "white";
 	c.fillRect(0, 0, canvas.width, canvas.height);
 
 	genericObjects.forEach((genericObject) => {
@@ -196,9 +192,7 @@ function animate() {
 		player.velocity.x = player.speed;
 	} else if (
 		(keys.left.pressed && player.position.x > 100) ||
-		(keys.left.pressed &&
-			scrollOffset === 0 &&
-			player.position.x < 0)
+		(keys.left.pressed && scrollOffset === 0 && player.position.x < 0)
 	) {
 		player.velocity.x = -player.speed;
 	} else if (
@@ -209,7 +203,7 @@ function animate() {
 	} else {
 		player.velocity.x = 0;
 
-		if (keys.right.pressed ) {
+		if (keys.right.pressed) {
 			scrollOffset += player.speed;
 			platforms.forEach((platform) => {
 				platform.position.x -= player.speed;
@@ -225,24 +219,17 @@ function animate() {
 			genericObjects.forEach((genericObject) => {
 				genericObject.position.x += player.speed * 0.66;
 			});
-		} else if(scrollOffset>(PlatformImage.width * 8))
-			scrollOffset=0;
-		
+		}
 	}
 
 	//platform collision detection
 	platforms.forEach((platform) => {
 		if (
-			player.position.y + player.height <=
+			player.position.y + player.height <= platform.position.y &&
+			player.position.y + player.height + player.velocity.y >=
 				platform.position.y &&
-			player.position.y +
-				player.height +
-				player.velocity.y >=
-				platform.position.y &&
-			player.position.x + player.width >=
-				platform.position.x &&
-			player.position.x <=
-				platform.position.x + platform.width
+			player.position.x + player.width >= platform.position.x &&
+			player.position.x <= platform.position.x + platform.width
 		) {
 			player.velocity.y = 0;
 		}
@@ -250,7 +237,7 @@ function animate() {
 
 	//win condition
 	if (scrollOffset > PlatformImage.width * 9) {
-		console.log('win');
+		console.log("win");
 	}
 
 	//loose condition
@@ -261,42 +248,43 @@ function animate() {
 
 animate();
 
-addEventListener('keydown', ({ keyCode }) => {
+addEventListener("keydown", ({ keyCode }) => {
 	switch (keyCode) {
 		case 65:
-			console.log('left');
+			console.log("left");
 			keys.left.pressed = true;
 
 			break;
 		case 83:
-			console.log('down');
+			console.log("down");
 			break;
 		case 68:
-			console.log('right');
+			console.log("right");
 			keys.right.pressed = true;
+
 			break;
 		case 87:
-			console.log('up');
+			console.log("up");
 			player.velocity.y -= 10;
 			break;
 	}
 });
 
-addEventListener('keyup', ({ keyCode }) => {
+addEventListener("keyup", ({ keyCode }) => {
 	switch (keyCode) {
 		case 65:
-			console.log('left');
+			console.log("left");
 			keys.left.pressed = false;
 			break;
 		case 83:
-			console.log('down');
+			console.log("down");
 			break;
 		case 68:
-			console.log('right');
+			console.log("right");
 			keys.right.pressed = false;
 			break;
 		case 87:
-			console.log('up');
+			console.log("up");
 			break;
 	}
 });
