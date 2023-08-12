@@ -25,7 +25,7 @@ class Player {
 			x: 0,
 			y: 0,
 		};
-		this.width = 60;
+		this.width = 70;
 		this.height = 150;
 
 		this.image = walk;
@@ -176,8 +176,6 @@ function init() {
 init();
 function animate() {
 	requestAnimationFrame(animate);
-	c.fillStyle = "white";
-	c.fillRect(0, 0, canvas.width, canvas.height);
 
 	genericObjects.forEach((genericObject) => {
 		genericObject.draw();
@@ -236,8 +234,9 @@ function animate() {
 	});
 
 	//win condition
-	if (scrollOffset > PlatformImage.width * 9) {
-		console.log("win");
+	if (scrollOffset > PlatformImage.width * 9 + 500) {
+		alert("You won the game!");
+		init();
 	}
 
 	//loose condition
