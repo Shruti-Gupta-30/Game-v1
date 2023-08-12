@@ -134,6 +134,31 @@ function init() {
 			y: 250,
 			image: PlatformSmallTall,
 		}),
+		new Platform({
+			x: PlatformImage.width * 6 + 300,
+			y: 150,
+			image: PlatformSmallTall,
+		}),
+		new Platform({
+			x: PlatformImage.width * 8 - 40,
+			y: 300,
+			image: PlatformSmallTall,
+		}),
+		new Platform({
+			x: PlatformImage.width * 7 + 250,
+			y: 470,
+			image: PlatformImage,
+		}),
+		new Platform({
+			x: PlatformImage.width * 8 + 500,
+			y: 50,
+			image: PlatformSmallTall,
+		}),
+		new Platform({
+			x: PlatformImage.width * 9 + 500,
+			y: 470,
+			image: PlatformImage,
+		}),
 	];
 
 	genericObjects = [
@@ -176,6 +201,11 @@ function animate() {
 			player.position.x > 0)
 	) {
 		player.velocity.x = -player.speed;
+	} else if (
+		keys.right.pressed &&
+		scrollOffset > PlatformImage.width * 9 + 600
+	) {
+		player.velocity.x = 0;
 	} else {
 		player.velocity.x = 0;
 
@@ -217,7 +247,7 @@ function animate() {
 	});
 
 	//win condition
-	if (scrollOffset > 2000) {
+	if (scrollOffset > PlatformImage.width * 9) {
 		console.log('win');
 	}
 
