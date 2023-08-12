@@ -236,6 +236,7 @@ function animate() {
 	//win condition
 	if (scrollOffset > PlatformImage.width * 9 + 500) {
 		alert("You won the game!");
+		keys.right.pressed = false;
 		init();
 	}
 
