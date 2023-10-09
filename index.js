@@ -185,7 +185,9 @@ function animate() {
 		platform.draw();
 	});
 	player.update();
-
+	// if (keys.up.pressed && player.position.y < 0) {
+	// 	player.position.y = -10;
+	// }
 	if (keys.right.pressed && player.position.x < 400) {
 		player.velocity.x = player.speed;
 	} else if (
@@ -241,7 +243,9 @@ function animate() {
 	}
 
 	//loose condition
-	if (player.position.y > canvas.height) {
+	if (player.position.y > canvas.height - 150) {
+		alert("You lost the game!");
+		keys.right.pressed = false;
 		init();
 	}
 }
@@ -251,20 +255,16 @@ animate();
 addEventListener("keydown", ({ keyCode }) => {
 	switch (keyCode) {
 		case 65:
-			console.log("left");
 			keys.left.pressed = true;
 
 			break;
 		case 83:
-			console.log("down");
 			break;
 		case 68:
-			console.log("right");
 			keys.right.pressed = true;
 
 			break;
 		case 87:
-			console.log("up");
 			player.velocity.y -= 10;
 			break;
 	}
@@ -273,18 +273,15 @@ addEventListener("keydown", ({ keyCode }) => {
 addEventListener("keyup", ({ keyCode }) => {
 	switch (keyCode) {
 		case 65:
-			console.log("left");
 			keys.left.pressed = false;
 			break;
 		case 83:
-			console.log("down");
 			break;
 		case 68:
-			console.log("right");
 			keys.right.pressed = false;
 			break;
 		case 87:
-			console.log("up");
+			player.velocity.y += 12;
 			break;
 	}
 });
